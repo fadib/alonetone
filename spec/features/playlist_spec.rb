@@ -54,6 +54,7 @@ RSpec.describe 'playlists', type: :feature, js: true do
       first_upload = find('#your_uploads .asset:nth-child(1) .add')
       first_upload.click
       first_upload.click
+      expect(page).to have_selector('.ajax_success', visible: true)
       expect(page).to have_selector('.sortable .asset', count: 3)
 
       # Move "Manfacturer of the Finest Cheese" to be the last song
@@ -61,6 +62,10 @@ RSpec.describe 'playlists', type: :feature, js: true do
       last_track = find('.sortable .asset:last-child')
       first_track_handle.drag_to(last_track)
       expect(find('.sortable .asset:last-child .track_link').text).to eql('Manufacturer of the Finest Cheese')
+
+      expect(page).to have_selector('.ajax_success', visible: true)
+      sleep 0.5 # exact length of "fade in" animation
+      pause_animations # prevent percy glitch
       Percy.snapshot(page, name: 'Playlist Edit')
     end
   end
